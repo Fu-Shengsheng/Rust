@@ -13,6 +13,15 @@ fn main() {
     another_function(99_999);
 
     some_func('A', 666);
+    
+    // rust 的语句并不返回值，有别于C
+    // 所以不能使用 let x = y = 1 的写法
+    let x= 6;
+
+    // rust 的表达式返回值
+    // 函数是一个表达式
+    // 宏调用是一个表达式
+    // 创建新作用域的大括号（{}代码块）也是一个表达式
 }
 
 fn another_function(value: i32) {
