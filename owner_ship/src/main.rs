@@ -11,4 +11,48 @@
 
 fn main() {
     println!("Hello, world!");
+
+    let mut s = String::from("wowowo hahaha");
+    let word = first_word(&s);
+    println!("index is {}", word);
+    // s.clear();
+    // println!("index is {}", word);
+
+    let s1 = s.clone();
+
+    // 字面值就是slice
+    // slice_word其实是字面值类型
+    let mut slice_word = first_word_slice(&s1);
+    println!("slice_word is {}", slice_word);
+
+    // 字面值就是slice
+    // slice_temp其实是字面值类型
+    let slice_temp = &slice_word[..2];
+    slice_word = "aaaaaa";
+    println!("{}", slice_temp);
+    println!("slice_word is {}", slice_word);
+}
+
+fn first_word(s: &String) -> usize {
+    let bytes = s.as_bytes();
+    for (i, &item) in bytes.iter().enumerate() {
+        println!("{}  {}  {}", i, item, b' ');
+        if item == b' ' {
+            return i;
+        }
+    }
+
+    s.len()
+}
+
+// 字符串slice的类型声明是&str
+fn first_word_slice(s: &String) -> &str {
+    let bytes = s.as_bytes();
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
 }
