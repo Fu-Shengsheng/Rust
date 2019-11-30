@@ -95,4 +95,13 @@ fn main() {
         5 => println!("five"),
         _ => println!("other"),
     }
+
+    let coins = Coin::Penny;
+    let mut count = 0;
+    if let Coin::Quarter(state) = coins {
+        println!("State quarter from {:?}!", state);
+    } else {
+        count += 1;
+    }
+    println!("count {}", count);
 }
