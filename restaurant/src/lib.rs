@@ -1,20 +1,8 @@
-// 定义模块，整个模块都植根于名为crate的隐式模块下
-mod front_of_house {
-    // 定义内嵌模块
-    // 使用Pub关键字标记模块，使其可以被外部访问
-    pub mod hosting {
-        // 公有模块内部的项不一定公有
-        pub fn add_to_waitlist() {
-            println!("add to waitlist");
-        }
-        fn seat_at_table() {}
-    }
-    mod serving {
-        fn take_order() {}
-        fn server_order() {}
-        fn take_payment() {}
-    }
-}
+// 声明在领域个与模块同名的文件中加载模块的内容
+mod front_of_house;
+
+// 使用use关键字将名称引入作用域
+pub use crate::front_of_house::hosting;
 
 // rust中默认所有项（函数、方法、结构体、枚举、模块和常量）都是私有的
 // 父模块中的项不能使用子模块中的私有项
@@ -25,6 +13,8 @@ pub fn eat_at_restaurant() {
 
     // relative path
     front_of_house::hosting::add_to_waitlist();
+    // use一般引入目标模块的父模块
+    hosting::add_to_waitlist();
 
     let mut meal = back_of_house::Breakfast::summer("Rye");
     meal.toast = String::from("Wheat");
@@ -70,3 +60,20 @@ mod back_of_house {
 
 // 结构体公有，内部项默认私有
 // 枚举公有，内部项默认公有
+
+// 使用as关键字提供新的名称
+// 可以避免引入模块名称重复
+use std::fmt::Result;
+use std::io::Result as IoResult;
+
+fn function1() -> Result {}
+fn function2() -> IoResult {}
+
+// 使用嵌套路径消除大量的use行
+// 一个use语句同时引入多个带有相同前缀的项
+use std::{cmp::Ordering, io};
+// 使用self将父同子模块一同引入
+use std::io::{self, Write};
+
+// 通过global运算符将所有的公有定义引入作用域
+use std::collections::*;
