@@ -80,7 +80,8 @@ fn largest_i32(list: &[i32]) -> i32 {
 }
 
 // 使用泛型抽象公共函数，可以同时处理不同数据类型的集合
-fn largest<T>(list: &[T]) -> T {
+// trait Bounds中指定了传入的参数必须实现PartialOrd（用于比较）和Copy(用于在栈上进行数据拷贝)两个trait
+fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
     let mut largest = list[0];
     for &item in list.iter() {
         if item > largest {
@@ -92,7 +93,12 @@ fn largest<T>(list: &[T]) -> T {
 
 // 定义trait
 pub trait Summary {
-    fn summarize(&self) -> String;
+    // 默认实现
+    fn summarize(&self) -> String {
+        String::from("Read more...")
+    }
+
+    fn summarize_author(&self) -> String;
 }
 
 pub struct NewArticle {
@@ -102,9 +108,11 @@ pub struct NewArticle {
     pub content: String,
 }
 
+// 使用默认的 summarize 实现
 impl Summary for NewArticle {
-    fn summarize(&self) -> String {
-        format!("{},by{} ({})", self.headline, self.author, self.location)
+    // 没有默认实现的需要在引入时进行实现
+    fn summarize_author(&self) -> String {
+        format!("@{}", self.author)
     }
 }
 
@@ -116,7 +124,20 @@ pub struct Tweet {
 }
 
 impl Summary for Tweet {
+    // 重载 summarize
     fn summarize(&self) -> String {
         format!("{}: {}", self.username, self.content)
     }
+    fn summarize_author(&self) -> String {
+        format!("@{}", self.username)
+    }
+}
+
+// trait作为参数, 可以传入实现了Summary的实例（如Tweet和NewsArticle）
+pub fn notify(item: impl Summary) {
+    println!("Breaking news! {}", item.summarize());
+}
+// trait Bound
+pub fn notify_T<T: Summary>(item: T) {
+    println!("Breaking news! {}", item.summarize());
 }
